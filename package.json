@@ -1,0 +1,68 @@
+{
+  "name": "davidual",
+  "private": true,
+  "devDependencies": {
+    "@babel/cli": "^7.4.3",
+    "@babel/core": "^7.4.3",
+    "@babel/preset-env": "^7.4.3",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/preset-typescript": "^7.3.3",
+    "@storybook/addon-actions": "^5.0.6",
+    "@storybook/addon-knobs": "^5.0.6",
+    "@storybook/addon-links": "^5.0.6",
+    "@storybook/addons": "^5.0.6",
+    "@storybook/react": "^5.0.6",
+    "@types/node": "^11.13.0",
+    "@types/storybook__addon-actions": "^3.4.2",
+    "@types/storybook__addon-knobs": "^4.0.5",
+    "@types/storybook__addon-links": "^3.3.4",
+    "@types/storybook__react": "^4.0.1",
+    "awesome-typescript-loader": "^5.2.1",
+    "babel-core": "7.0.0-bridge.0",
+    "babel-loader": "^8.0.5",
+    "cross-env": "^5.2.0",
+    "husky": "^1.3.1",
+    "lerna": "^3.13.1",
+    "now": "^15.0.2",
+    "npm-run-all": "^4.1.5",
+    "stylelint": "^9.10.1",
+    "stylelint-config-standard": "^18.2.0",
+    "stylelint-config-styled-components": "^0.1.1",
+    "stylelint-processor-styled-components": "^1.6.0",
+    "tslint": "^5.15.0",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-plugin-prettier": "^2.0.1",
+    "tslint-react": "^4.0.0",
+    "typescript": "^3.4.1"
+  },
+  "scripts": {
+    "pub:manual": "lerna run tsc && lerna run build && lerna publish",
+    "pub": "lerna publish patch --yes",
+    "start:ui": "cd packages/ui && yarn start",
+    "start:watch": "lerna run watch",
+    "start": "run-p start:watch start:ui",
+    "bootstrap": "lerna bootstrap && lerna link && yarn",
+    "test": "lerna run test",
+    "format": "prettier --check \"./**/*.{js,jsx,css,html,ts,tsx}\"",
+    "format:fix": "prettier --write \"./**/*.{js,jsx,json,css,html,ts,tsx}\"",
+    "lint:ts": "tslint 'packages/**/*.ts{,x}'",
+    "lint:css": "stylelint 'packages/**/*.ts{,x}'",
+    "lint": "run-p -c lint:ts lint:css",
+    "lint:fix": "yarn lint:ts --fix",
+    "storybook": "start-storybook -p 9009",
+    "build:storybook": "build-storybook",
+    "build": "lerna run build"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "resolutions": {
+    "babel-core": "^7.0.0-bridge.0"
+  },
+  "husky": {
+    "hooks": {
+      "post-merge": "yarn bootstrap",
+      "pre-commit": "run-p format:fix lint:fix"
+    }
+  }
+}

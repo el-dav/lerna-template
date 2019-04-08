@@ -1,0 +1,35 @@
+{
+  "name": "@davidual/ui",
+  "version": "0.1.9",
+  "dependencies": {
+    "@davidual/assets": "^0.1.9",
+    "@davidual/theme": "^0.1.8",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  },
+  "devDependencies": {
+    "@types/jest": "24.0.11",
+    "@types/node": "11.12.2",
+    "@types/react": "16.8.10",
+    "@types/react-dom": "16.8.3",
+    "now": "^15.0.1",
+    "prettier": "^1.16.4",
+    "react-scripts": "2.1.8"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test:watch": "react-scripts test",
+    "eject": "react-scripts eject",
+    "test": "react-scripts test --no-watch"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}

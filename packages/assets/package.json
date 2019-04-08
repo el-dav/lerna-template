@@ -1,0 +1,28 @@
+{
+  "name": "@davidual/assets",
+  "version": "0.1.9",
+  "description": "> TODO: description",
+  "author": "David <d.miller01@gmail.com>",
+  "homepage": "https://github.com/el-dav/davidual#readme",
+  "license": "ISC",
+  "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/el-dav/davidual.git"
+  },
+  "scripts": {
+    "watch": "tsc -w",
+    "build": "tsc"
+  },
+  "bugs": {
+    "url": "https://github.com/el-dav/davidual/issues"
+  },
+  "dependencies": {
+    "react": "^16.8.6"
+  },
+  "devDependencies": {
+    "@types/node": "11.12.2",
+    "@types/react": "16.8.10",
+    "typescript": "^3.4.1"
+  }
+}

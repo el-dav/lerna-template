@@ -1,0 +1,113 @@
+# Javascript Node CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+#
+
+version: 2
+
+var_1: &default_docker_image circleci/node:10.12
+
+var_2: &restore_cache
+  restore_cache:
+    keys:
+      - v1-dependencies-{{ checksum "yarn.lock" }}
+      # fallback to using the latest cache if no exact match is found
+      - v1-dependencies-
+
+var_3: &save_cache
+  save_cache:
+    paths:
+      - node_modules
+    key: v1-dependencies-{{ checksum "yarn.lock" }}
+
+var_4: &job_defaults
+  docker:
+    - image: *default_docker_image
+
+var_5: &deploy_app
+  deploy:
+    name: Deploy & Alias
+    command: |
+      if [ "${CIRCLE_BRANCH}" == "master" ]; then
+          now packages/ui/build --name $CIRCLE_PROJECT_REPONAME-master --token $NOW_TOKEN
+      else
+          now packages/ui/build --name $CIRCLE_PROJECT_REPONAME-$CIRCLE_BRANCH --token $NOW_TOKEN
+      fi
+
+var_6: &deploy_storybook
+  deploy:
+    name: Deploy & Alias
+    command: |
+      if [ "${CIRCLE_BRANCH}" == "master" ]; then
+          now storybook-static --name $CIRCLE_PROJECT_REPONAME-master-storybook --token $NOW_TOKEN
+      else
+          now storybook-static --name $CIRCLE_PROJECT_REPONAME-$CIRCLE_BRANCH-storybook --token $NOW_TOKEN
+      fi
+
+var_7: &install_now
+  run:
+    name: Install Now CLI
+    command: sudo npm install --global --unsafe-perm now
+
+jobs:
+  publish:
+    <<: *job_defaults
+    steps:
+      - checkout
+      - *restore_cache
+      - run: yarn install --frozen-lockfile
+      - *save_cache
+      - run: yarn bootstrap
+      - run: yarn build
+      - run: yarn test
+      - run: yarn format
+      - run: yarn lint
+      - run: yarn build:storybook
+      - run: git config user.email "${GITHUB_EMAIL}"
+      - run: git config user.name "${GITHUB_NAME}"
+      - run: git config user.password "${GITHUB_PAC}"
+      - *install_now
+      - *deploy_app
+      - *deploy_storybook
+      - run: yarn pub
+      
+  check:
+    <<: *job_defaults
+    steps:
+      - checkout
+      - *restore_cache
+      - run: yarn install --frozen-lockfile
+      - *save_cache
+      - run: yarn bootstrap
+      - run: yarn build
+      - run: yarn test
+      - run: yarn format
+      - run: yarn lint
+      - run: yarn build:storybook
+      - *install_now
+      - *deploy_app
+      - *deploy_storybook
+
+workflows:
+  version: 2
+  check_branch:
+    jobs:
+      - check:
+          filters:
+            branches:
+              ignore:
+                - master
+  publish:
+    jobs:
+      - publish:
+          filters:
+            branches:
+              only:
+                - master
+
+
+# yarn now packages/ui/build  --name master
+# yarn now rm master --safe --yes
+
+
+# yarn now packages/ui/build --name $CIRCLE_PROJECT_REPONAME-$CLEAN_BRANCH_NAME
